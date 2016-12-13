@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+  <h1>Hello {{ user.screen_name }}!</h1>
+  <form>
+    <p>
+      <input type="radio" name="sort_by" value="like" checked="checked" />Likes
+      <input type="radio" name="sort_by" value="retweet" checked="checked" />RTs
+    </p>
+    <label>From: <input type="date" name="from_date" /></label>
+    <label>To: <input type="date" name="to_date" /></label>
+  </form>
+</body>
+</html>

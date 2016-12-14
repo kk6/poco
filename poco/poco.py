@@ -9,14 +9,14 @@ from bottle import (
     redirect,
     request,
 )
-from middleware.tweepy import TweepyMiddleware
+from middleware.twitter import TwitterMiddleware
 
-tweepy_config = {
+twitter_config = {
   'consumer_key': os.environ['POCO_CONSUMER_KEY'],
   'consumer_secret': os.environ['POCO_CONSUMER_SECRET'],
   'callback_url': 'http://127.0.0.1:8000/verify',
 }
-app = TweepyMiddleware(bottle.app(), tweepy_config)
+app = TwitterMiddleware(bottle.app(), twitter_config)
 
 
 @route('/')
@@ -26,23 +26,23 @@ def index():
 
 @route('/oauth')
 def oauth():
-    tweepy = request.environ.get('tweepy')
-    redirect_url = tweepy.get_authorization_url()
+    twitter = request.environ.get('twitter')
+    redirect_url = twitter.get_authorization_url()
     return redirect(redirect_url)
 
 
 @route('/verify')
 def verify():
-    tweepy = request.environ.get('tweepy')
+    twitter = request.environ.get('twitter')
     verifier = request.params.get('oauth_verifier')
-    tweepy.authenticate(verifier)
+    twitter.authenticate(verifier)
     return redirect('home')
 
 
 @route('/home')
 def home():
-    tweepy = request.environ.get('tweepy')
-    user = tweepy.api.me()
+    twitter = request.environ.get('twitter')
+    user = twitter.api.me()
     return template('home', user=user)
 
 

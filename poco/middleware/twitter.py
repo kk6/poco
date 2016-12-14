@@ -4,7 +4,7 @@
 import tweepy
 
 
-class TweepyManager(object):
+class TwitterManager(object):
     def __init__(self, consumer_key, consumer_secret, access_token=None,
                  access_token_secret=None, callback_url=None):
         self.consumer_key = consumer_key
@@ -60,14 +60,14 @@ class TweepyManager(object):
         self.set_api()
 
 
-class TweepyMiddleware(object):
+class TwitterMiddleware(object):
 
     def __init__(self, app, tweepy_config):
         self.app = app
         self.tweepy_settings = tweepy_config
-        self.tweepy_manager = TweepyManager(**self.tweepy_settings)
+        self.tweepy_manager = TwitterManager(**self.tweepy_settings)
 
     def __call__(self, environ, start_response):
-        environ['tweepy'] = self.tweepy_manager
+        environ['twitter'] = self.tweepy_manager
         return self.app(environ, start_response)
 

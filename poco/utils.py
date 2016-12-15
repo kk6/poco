@@ -18,12 +18,12 @@ class TweetsCsvParser(object):
         with open(self.path, encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
-                if timestamp2arrow(since) <= timestamp2arrow(row['timestamp']):
-                    url = "https://twitter.com/{screen_name}/status/{tweet_id}/photo/1".format(
-                        screen_name=self.screen_name,
-                        tweet_id=row['tweet_id'],
-                    )
-                    if url == row['expanded_urls']:
+                url = "https://twitter.com/{screen_name}/status/{tweet_id}/photo/1".format(
+                    screen_name=self.screen_name,
+                    tweet_id=row['tweet_id'],
+                )
+                if url == row['expanded_urls']:
+                    if timestamp2arrow(since) <= timestamp2arrow(row['timestamp']):
                         yield row
 
 

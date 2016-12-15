@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+  <a href="import">Import CSV</a>
   <h1>Hello {{ user.screen_name }}!</h1>
   <form>
     <p>
@@ -14,5 +11,11 @@
     <label>From: <input type="date" name="from_date" /></label>
     <label>To: <input type="date" name="to_date" /></label>
   </form>
-</body>
-</html>
+  <div>
+    {% for data in data_list %}
+      {{ data.oembed.html }}
+    {% else %}
+      <p>Data not found yet.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

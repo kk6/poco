@@ -10,6 +10,7 @@ from bottle import (
     request,
 )
 from middleware.twitter import TwitterMiddleware
+import utils
 
 twitter_config = {
   'consumer_key': os.environ['POCO_CONSUMER_KEY'],
@@ -43,8 +44,36 @@ def verify():
 def home():
     twitter = request.environ.get('twitter')
     user = twitter.api.me()
-    return template('home', user=user)
+    dir_path = os.path.join('/tmp', user.id_str)
+    path = os.path.join(dir_path, 'tweets.csv')
+    data_list = []
+    if os.path.exists(path):
+        parser = utils.TweetsCsvParser(path, screen_name=user.screen_name)
+        media_tweets = parser.filter_images_by_since('2016-01-01 00:00:00 +0900')
+        _data_list = utils.fetch_tweet_data(twitter.api, media_tweets)
+        sorted_data = utils.sort_by('likes', _data_list, reverse=True)
+        for data in sorted_data[:100]:
+            data['oembed'] = twitter.api.get_oembed(data['tweet_id'])
+            data_list.append(data)
+    return template('home', user=user, data_list=data_list)
+
+
+@route('/import')
+def import_csv():
+    return template('import')
+
+
+@route('/import', method='POST')
+def do_import_csv():
+    tweepy = request.environ.get('tweepy')
+    user = tweepy.api.me()
+    dir_path = os.path.join('/tmp', user.id_str)
+    os.makedirs(dir_path, exist_ok=True)
+    file = request.files.get('file')
+    file.save(dir_path, overwrite=True)
+    return redirect('home')
 
 
 if __name__ == "__main__":
     run(app=app, host="localhost", port=8000, debug=True, reloader=True)
+

@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import csv
+import datetime
 import itertools
 import math
+
 import arrow
 
 
-def timestamp2arrow(timestamp):
-    return arrow.get(timestamp, 'YYYY-MM-DD HH:mm:ss Z')
+def str2datetime(s):
+    return datetime.datetime.strptime(s, '%Y-%m-%d %H:%M:%S %z')
 
 
 class TweetsCsvParser(object):
@@ -15,6 +17,7 @@ class TweetsCsvParser(object):
         self.screen_name = screen_name
 
     def filter_images_by_since(self, since):
+        since = str2datetime(since)
         with open(self.path, encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
@@ -23,7 +26,7 @@ class TweetsCsvParser(object):
                     tweet_id=row['tweet_id'],
                 )
                 if url == row['expanded_urls']:
-                    if timestamp2arrow(since) <= timestamp2arrow(row['timestamp']):
+                    if since <= str2datetime(row['timestamp']):
                         yield row
 
 
@@ -83,4 +86,3 @@ class Pagination(object):
         start = (self.current_page - 1) * self.per_page
         end = start + self.per_page
         return self.object_list[start:end]
-

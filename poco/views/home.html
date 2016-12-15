@@ -18,4 +18,9 @@
       <p>Data not found yet.</p>
     {% endfor %}
   </div>
+  {% if paginator %}
+    {% if paginator.has_prev %}<a href="/home/{{ paginator.prev_page }}/">前へ</a>{% endif %}
+    {{ paginator.current_page }} of {{ paginator.pages }}.
+    {% if paginator.has_next %}<a href="/home/{{ paginator.next_page }}/">次へ</a>{% endif %}
+  {% endif %}
 {% endblock %}

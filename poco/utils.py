@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import csv
 import itertools
-
+import math
 import arrow
 
 
@@ -47,3 +47,40 @@ def fetch_tweet_data(api, media_tweets, text_trancate_to=30):
 
 def sort_by(key, data_list, reverse=False):
     return sorted(data_list, key=lambda d: d[key], reverse=reverse)
+
+
+class Pagination(object):
+
+    def __init__(self, object_list, per_page, current_page):
+        self.object_list = object_list
+        self.per_page = per_page
+        self.current_page = current_page
+        self.total_count = len(object_list)
+
+    @property
+    def pages(self):
+        return math.ceil(self.total_count / self.per_page)
+
+    @property
+    def has_prev(self):
+        return self.current_page > 1
+
+    @property
+    def has_next(self):
+        return self.current_page < self.pages
+
+    @property
+    def prev_page(self):
+        if self.has_prev:
+            return self.current_page - 1
+
+    @property
+    def next_page(self):
+        if self.has_next:
+            return self.current_page + 1
+
+    def paginate(self):
+        start = (self.current_page - 1) * self.per_page
+        end = start + self.per_page
+        return self.object_list[start:end]
+

@@ -41,21 +41,25 @@ def verify():
 
 
 @route('/home')
-def home():
+@route('/home/<page:int>/')
+def home(page=1):
     twitter = request.environ.get('twitter')
     user = twitter.api.me()
     dir_path = os.path.join('/tmp', user.id_str)
     path = os.path.join(dir_path, 'tweets.csv')
     data_list = []
+    paginator = None
     if os.path.exists(path):
         parser = utils.TweetsCsvParser(path, screen_name=user.screen_name)
         media_tweets = parser.filter_images_by_since('2016-01-01 00:00:00 +0900')
         _data_list = utils.fetch_tweet_data(twitter.api, media_tweets)
         sorted_data = utils.sort_by('likes', _data_list, reverse=True)
-        for data in sorted_data[:100]:
+        paginator = utils.Pagination(sorted_data, per_page=10, current_page=page)
+        paginated_data = paginator.paginate()
+        for data in paginated_data:
             data['oembed'] = twitter.api.get_oembed(data['tweet_id'])
             data_list.append(data)
-    return template('home', user=user, data_list=data_list)
+    return template('home', user=user, data_list=data_list, paginator=paginator)
 
 
 @route('/import')
@@ -65,8 +69,8 @@ def import_csv():
 
 @route('/import', method='POST')
 def do_import_csv():
-    tweepy = request.environ.get('tweepy')
-    user = tweepy.api.me()
+    twitter = request.environ.get('twitter')
+    user = twitter.api.me()
     dir_path = os.path.join('/tmp', user.id_str)
     os.makedirs(dir_path, exist_ok=True)
     file = request.files.get('file')

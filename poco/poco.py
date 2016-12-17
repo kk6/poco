@@ -11,6 +11,8 @@ from bottle import (
 )
 from middleware.twitter import TwitterMiddleware
 import utils
+from models import create_or_update_tweet
+from search import search_tweets
 
 twitter_config = {
   'consumer_key': os.environ['POCO_CONSUMER_KEY'],
@@ -45,21 +47,24 @@ def verify():
 def home(page=1):
     twitter = request.environ.get('twitter')
     user = twitter.api.me()
-    dir_path = os.path.join('/tmp', user.id_str)
-    path = os.path.join(dir_path, 'tweets.csv')
-    data_list = []
-    paginator = None
-    if os.path.exists(path):
-        parser = utils.TweetsCsvParser(path, screen_name=user.screen_name)
-        media_tweets = parser.filter_images_by_since('2016-01-01 00:00:00 +0900')
-        _data_list = utils.fetch_tweet_data(twitter.api, media_tweets)
-        sorted_data = utils.sort_by('likes', _data_list, reverse=True)
-        paginator = utils.Pagination(sorted_data, per_page=10, current_page=page)
-        paginated_data = paginator.paginate()
-        for data in paginated_data:
-            data['oembed'] = twitter.api.get_oembed(data['tweet_id'])
-            data_list.append(data)
-    return template('home', user=user, data_list=data_list, paginator=paginator)
+    import datetime
+    search_criteria = {'since': datetime.datetime(2016, 1, 1, 0, 0, 0), 'until': None,
+                       'media_only': True, 'screen_name': 'kk6'}
+    tweets = search_tweets(search_criteria, selections=['tweet_id'])
+
+    _data_list = utils.fetch_tweet_data(twitter.api, tweets)
+    sorted_data = utils.sort_by('likes', _data_list, reverse=True)
+
+    paginator = utils.Pagination(sorted_data, per_page=10, current_page=page)
+    paginated_data = paginator.paginate()
+
+    # Set oEmbded
+    render_data_list = []
+    for data in paginated_data:
+        data['oembed'] = twitter.api.get_oembed(data['tweet_id'])
+        render_data_list.append(data)
+
+    return template('home', user=user, data_list=render_data_list, paginator=paginator)
 
 
 @route('/import')
@@ -70,14 +75,16 @@ def import_csv():
 @route('/import', method='POST')
 def do_import_csv():
     twitter = request.environ.get('twitter')
-    user = twitter.api.me()
-    dir_path = os.path.join('/tmp', user.id_str)
-    os.makedirs(dir_path, exist_ok=True)
     file = request.files.get('file')
-    file.save(dir_path, overwrite=True)
+    user = twitter.api.me()
+    for data in utils.parse_csv(utils.decode_file(file.file)):
+        data['user_id'] = user.id
+        create_or_update_tweet(data)
     return redirect('home')
 
 
 if __name__ == "__main__":
+    from models import create_sqlite_table
+    create_sqlite_table()
     run(app=app, host="localhost", port=8000, debug=True, reloader=True)
 

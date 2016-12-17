@@ -52,12 +52,12 @@ def home(page=1):
     render_data_list = []
     paginator = None
     if request.params:
-        params = request.params.dict
+        p = request.params.dict
         search_criteria = {
-            'since': datetime.datetime.strptime(params['since'][0], '%Y-%m-%d') if params['since'] else None,
-            'until': datetime.datetime.strptime(params['until'][0], '%Y-%m-%d') if params['since'] else None,
-            'media_only': params['media_only'][0] == 'on',
-            'screen_name': params['screen_name'][0],
+            'since': datetime.datetime.strptime(p['since'][0], '%Y-%m-%d') if p['since'][0] else None,
+            'until': datetime.datetime.strptime(p['until'][0], '%Y-%m-%d') if p['until'][0] else None,
+            'media_only': 'media_only' in p,
+            'screen_name': p['screen_name'][0],
         }
 
         tweets = search_tweets(search_criteria, selections=['tweet_id'])
@@ -88,8 +88,9 @@ def do_import_csv():
     twitter = request.environ.get('twitter')
     file = request.files.get('file')
     user = twitter.api.me()
+    user_id = user.id
     for data in utils.parse_tweets_csv(codecs.iterdecode(file.file, 'utf8')):
-        data['user_id'] = user.id
+        data['user_id'] = user_id
         create_or_update_tweet(data)
     return redirect('home')
 

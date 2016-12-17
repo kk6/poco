@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import codecs
 import csv
 import datetime
 import itertools
@@ -28,11 +27,7 @@ def force_int(s):
         return None
 
 
-def decode_file(file):
-    return codecs.iterdecode(file, 'utf-8')
-
-
-def parse_csv(fp):
+def parse_tweets_csv(fp):
     for row in csv.DictReader(fp):
         yield {
             'tweet_id': force_int(row['tweet_id']),

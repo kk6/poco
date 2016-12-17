@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import codecs
 import os
 
 import bottle
@@ -77,7 +78,7 @@ def do_import_csv():
     twitter = request.environ.get('twitter')
     file = request.files.get('file')
     user = twitter.api.me()
-    for data in utils.parse_csv(utils.decode_file(file.file)):
+    for data in utils.parse_tweets_csv(codecs.iterdecode(file.file, 'utf8')):
         data['user_id'] = user.id
         create_or_update_tweet(data)
     return redirect('home')

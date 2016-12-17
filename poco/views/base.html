@@ -4,11 +4,26 @@
     {% block head %}
     <link rel="stylesheet" href="style.css" />
     <title>{% block title %}{% endblock %} - Poco</title>
+    {% block css %}
+    <style>
+      .content {
+        width: 500px;
+        margin: 0 auto;
+      }
+      .footer {
+        width: 500px;
+        margin: 0 auto;
+      }
+      .pagination {
+       text-align: center;
+      }
+    </style>
+    {% endblock %}
     {% endblock %}
 </head>
 <body>
-    <div id="content">{% block content %}{% endblock %}</div>
-    <div id="footer">
+    <div id="content" class="content">{% block content %}{% endblock %}</div>
+    <div id="footer" class="footer">
         {% block footer %}
         &copy; Copyright 2016 by <a href="http://twitter.com/kk6/">kk6</a>.
         {% endblock %}

@@ -92,6 +92,8 @@ class Pagination(object):
             return self.current_page + 1
 
     def paginate(self):
+        """Returns a sub sequence of object_list
+        """
         start = (self.current_page - 1) * self.per_page
         end = start + self.per_page
         return self.object_list[start:end]

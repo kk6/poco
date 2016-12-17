@@ -8,7 +8,16 @@ import arrow
 
 
 def str2datetime(s):
-    return datetime.datetime.strptime(s, '%Y-%m-%d %H:%M:%S %z')
+    """Datetime strings to datetime object
+
+    :param str s: datetime string
+    :rtype: datetime
+    :return: datetime object. If an empty string is received, None is returned.
+    """
+    try:
+        return datetime.datetime.strptime(s, '%Y-%m-%d %H:%M:%S %z')
+    except ValueError:
+        return None
 
 
 class TweetsCsvParser(object):

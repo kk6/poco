@@ -3,13 +3,22 @@
 {% block content %}
   <a href="import">Import CSV</a>
   <h1>Hello {{ user.screen_name }}!</h1>
-  <form>
-    <p>
-      <input type="radio" name="sort_by" value="like" checked="checked" />Likes
-      <input type="radio" name="sort_by" value="retweet" checked="checked" />RTs
-    </p>
-    <label>From: <input type="date" name="from_date" /></label>
-    <label>To: <input type="date" name="to_date" /></label>
+  <form action="" method="get">
+    <fieldset>
+      <p>
+        <label for="likes">Likes:</label>
+        <input id="likes" type="radio" name="sort_by" value="like" checked="checked" />
+        <label for="rts">RTs:</label>
+        <input id="rts" type="radio" name="sort_by" value="retweet" checked="checked" />
+      </p>
+      <label>From: <input type="date" name="since" /></label>
+      <label>To: <input type="date" name="until" /></label>
+      <label for="media_only">Media tweets only.</label>
+      <input id="media_only" type="checkbox" name="media_only" />
+      <input type="hidden" name="user_id" value="{{ user.id }}" />
+      <input type="hidden" name="screen_name" value="{{ user.screen_name }}" />
+      <button type="submit">Search</button>
+    </fieldset>
   </form>
   <div>
     {% for data in data_list %}
@@ -19,8 +28,8 @@
     {% endfor %}
   </div>
   {% if paginator %}
-    {% if paginator.has_prev %}<a href="/home/{{ paginator.prev_page }}/">前へ</a>{% endif %}
+    {% if paginator.has_prev %}<a href="/home/{{ paginator.prev_page }}/{% if query_string %}?{{ query_string }}{% endif %}">前へ</a>{% endif %}
     {{ paginator.current_page }} of {{ paginator.pages }}.
-    {% if paginator.has_next %}<a href="/home/{{ paginator.next_page }}/">次へ</a>{% endif %}
+    {% if paginator.has_next %}<a href="/home/{{ paginator.next_page }}/{% if query_string %}?{{ query_string }}{% endif %}">次へ</a>{% endif %}
   {% endif %}
 {% endblock %}

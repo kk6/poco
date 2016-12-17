@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import codecs
+import datetime
 import os
 
 import bottle
@@ -48,24 +49,33 @@ def verify():
 def home(page=1):
     twitter = request.environ.get('twitter')
     user = twitter.api.me()
-    import datetime
-    search_criteria = {'since': datetime.datetime(2016, 1, 1, 0, 0, 0), 'until': None,
-                       'media_only': True, 'screen_name': 'kk6'}
-    tweets = search_tweets(search_criteria, selections=['tweet_id'])
-
-    _data_list = utils.fetch_tweet_data(twitter.api, tweets)
-    sorted_data = utils.sort_by('likes', _data_list, reverse=True)
-
-    paginator = utils.Pagination(sorted_data, per_page=10, current_page=page)
-    paginated_data = paginator.paginate()
-
-    # Set oEmbded
     render_data_list = []
-    for data in paginated_data:
-        data['oembed'] = twitter.api.get_oembed(data['tweet_id'])
-        render_data_list.append(data)
+    paginator = None
+    if request.params:
+        params = request.params.dict
+        search_criteria = {
+            'since': datetime.datetime.strptime(params['since'][0], '%Y-%m-%d') if params['since'] else None,
+            'until': datetime.datetime.strptime(params['until'][0], '%Y-%m-%d') if params['since'] else None,
+            'media_only': params['media_only'][0] == 'on',
+            'screen_name': params['screen_name'][0],
+        }
 
-    return template('home', user=user, data_list=render_data_list, paginator=paginator)
+        tweets = search_tweets(search_criteria, selections=['tweet_id'])
+
+        _data_list = utils.fetch_tweet_data(twitter.api, tweets)
+        sorted_data = utils.sort_by('likes', _data_list, reverse=True)
+
+        paginator = utils.Pagination(sorted_data, per_page=10, current_page=page)
+        paginated_data = paginator.paginate()
+
+        # Set oEmbded
+        render_data_list = []
+        for data in paginated_data:
+            data['oembed'] = twitter.api.get_oembed(data['tweet_id'])
+            render_data_list.append(data)
+
+    return template('home', user=user, data_list=render_data_list, paginator=paginator,
+                    query_string=request.query_string)
 
 
 @route('/import')

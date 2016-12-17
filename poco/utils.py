@@ -20,34 +20,37 @@ def str2datetime(s):
         return None
 
 
-class TweetsCsvParser(object):
-    def __init__(self, path, screen_name):
-        self.path = path
-        self.screen_name = screen_name
-
-    def filter_images_by_since(self, since):
-        since = str2datetime(since)
-        with open(self.path, encoding='utf-8') as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                url = "https://twitter.com/{screen_name}/status/{tweet_id}/photo/1".format(
-                    screen_name=self.screen_name,
-                    tweet_id=row['tweet_id'],
-                )
-                if url == row['expanded_urls']:
-                    if since <= str2datetime(row['timestamp']):
-                        yield row
+def force_int(s):
+    try:
+        return int(s)
+    except ValueError:
+        return None
 
 
-def fetch_tweet_data(api, media_tweets, text_trancate_to=30):
-    itr = iter(media_tweets)
+def parse_tweets_csv(fp):
+    for row in csv.DictReader(fp):
+        yield {
+            'tweet_id': force_int(row['tweet_id']),
+            'in_reply_to_status_id': force_int(row['in_reply_to_status_id']),
+            'in_reply_to_user_id': force_int(row['in_reply_to_user_id']),
+            'timestamp': str2datetime(row['timestamp']),
+            'text': row['text'],
+            'retweeted_status_id': force_int(row['retweeted_status_id']),
+            'retweeted_status_user_id': force_int(row['retweeted_status_user_id']),
+            'retweeted_status_timestamp': str2datetime(row['retweeted_status_timestamp']),
+            'expanded_urls': row['expanded_urls'],
+        }
+
+
+def fetch_tweet_data(api, tweets, text_trancate_to=30):
+    itr = iter(tweets)
     while 1:
         sub_iter = itertools.islice(itr, 100)
-        tweet_ids = [r['tweet_id'] for r in sub_iter]
+        tweet_ids = [t.tweet_id for t in sub_iter]
         if not tweet_ids:
             break
-        tweets = api.statuses_lookup(tweet_ids)
-        for tweet in tweets:
+        _tweets = api.statuses_lookup(tweet_ids)
+        for tweet in _tweets:
             yield {
                 'tweet_id': tweet.id,
                 'likes': tweet.favorite_count,

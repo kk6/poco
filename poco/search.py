@@ -19,7 +19,6 @@ def search_tweets(search_criteria, selections=None):
             end = "/photo/1"
             _clauses.append(Tweet.expanded_urls.startswith(start))
             _clauses.append(Tweet.expanded_urls.endswith(end))
-            _clauses.append(~(Tweet.expanded_urls.contains(',')))  # ignore RT/QT
         return functools.reduce(operator.and_, _clauses)
 
     if selections:

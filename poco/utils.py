@@ -4,8 +4,6 @@ import datetime
 import itertools
 import math
 
-import arrow
-
 
 def str2datetime(s):
     """Datetime strings to datetime object
@@ -42,7 +40,7 @@ def parse_tweets_csv(fp):
         }
 
 
-def fetch_tweet_data(api, tweets, text_trancate_to=30):
+def fetch_tweet_data(api, tweets):
     itr = iter(tweets)
     while 1:
         sub_iter = itertools.islice(itr, 100)
@@ -55,8 +53,6 @@ def fetch_tweet_data(api, tweets, text_trancate_to=30):
                 'tweet_id': tweet.id,
                 'likes': tweet.favorite_count,
                 'retweets': tweet.retweet_count,
-                'text': tweet.text.replace('\n', '')[:text_trancate_to],
-                'created_at': arrow.get(tweet.created_at).to('JST').format('MM/DD HH:mm'),
             }
 
 

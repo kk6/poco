@@ -1,9 +1,7 @@
 # commons
-arrow
 tweepy
 bottle
 jinja2
-beaker
 peewee
 
 # tests

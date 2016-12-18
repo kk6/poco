@@ -27,6 +27,32 @@ class TestStr2Datetime(object):
             target_func(non_str_value)
 
 
+class TestForceInt(object):
+    @pytest.fixture
+    def target_func(self):
+        from poco.utils import force_int
+        return force_int
+
+    @pytest.mark.parametrize(
+        's,expected',
+        [
+            ('100', 100),
+            (100, 100),
+            (2.5, 2),
+            ('', None),
+            (True, 1),
+            (False, 0),
+        ],
+    )
+    def test_call(self, target_func, s, expected):
+        assert target_func(s) == expected
+
+    @pytest.mark.parametrize('non_str_value', [None, object])
+    def test_type_error(self, target_func, non_str_value):
+        with pytest.raises(TypeError):
+            target_func(non_str_value)
+
+
 class TestPagination(object):
 
     @pytest.fixture

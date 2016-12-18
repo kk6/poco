@@ -51,19 +51,19 @@ def home(page=1):
     user = twitter.api.me()
     render_data_list = []
     paginator = None
-    if request.params:
-        p = request.params.dict
+    if request.query:
+        q = request.query
         search_criteria = {
-            'since': datetime.datetime.strptime(p['since'][0], '%Y-%m-%d') if p['since'][0] else None,
-            'until': datetime.datetime.strptime(p['until'][0], '%Y-%m-%d') if p['until'][0] else None,
-            'media_only': 'media_only' in p,
-            'screen_name': p['screen_name'][0],
+            'since': datetime.datetime.strptime(q['since'], '%Y-%m-%d') if q['since'] else None,
+            'until': datetime.datetime.strptime(q['until'], '%Y-%m-%d') if q['until'] else None,
+            'media_only': 'media_only' in q,
+            'screen_name': q['screen_name'],
         }
 
         tweets = search_tweets(search_criteria, selections=['tweet_id'])
 
         _data_list = utils.fetch_tweet_data(twitter.api, tweets)
-        sorted_data = utils.sort_by(p['sort_by'][0], _data_list, reverse=True)
+        sorted_data = utils.sort_by(q['sort_by'], _data_list, reverse=True)
 
         paginator = utils.Pagination(sorted_data, per_page=10, current_page=page)
         paginated_data = paginator.paginate()

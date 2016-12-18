@@ -3,23 +3,31 @@
 {% block content %}
   <a href="import">Import CSV</a>
   <h1>Hello {{ user.screen_name }}!</h1>
-  <form action="" method="get">
-    <fieldset>
-      <p>
-        <label for="likes">Likes:</label>
-        <input id="likes" type="radio" name="sort_by" value="likes" checked="checked" />
-        <label for="retweets">RTs:</label>
-        <input id="retweets" type="radio" name="sort_by" value="retweets" />
-      </p>
-      <label>From: <input type="date" name="since" value="{{ params.since }}" /></label>
-      <label>To: <input type="date" name="until" value="{{ params.until }}" /></label>
-      <label for="media_only">Media tweets only.</label>
-      <input id="media_only" type="checkbox" name="media_only" {% if params.media_only %}checked="checked"{% endif %} />
+  <div class="box">
+    <form action="" method="get">
+      <span>Srot by:</span>
+      <div class="sorts">
+        <input type="radio" name="sort_by" id="likes" value="likes"{% if params.sort_by == 'likes' %} checked{% endif %} />
+        <label for="likes" class="switch-likes">Likes</label>
+        <input type="radio" name="sort_by" id="retweets" value="retweets"{% if params.sort_by == 'retweets' %} checked{% endif %}>
+        <label for="retweets" class="switch-retweets">RTs</label>
+      </div>
+      <div class="term">
+        <label>From: <input type="date" name="since" value="{{ params.since }}" /></label>
+        <label>To: <input type="date" name="until" value="{{ params.until }}" /></label>
+      </div>
+      <div class="filter-media">
+        <label class="checkbox">Media tweets only
+          <input class="checkbox" type="checkbox" name="media_only" id="media_only"{% if params.media_only %} checked="checked"{% endif %} />
+        </label>
+      </div>
       <input type="hidden" name="user_id" value="{{ user.id }}" />
       <input type="hidden" name="screen_name" value="{{ user.screen_name }}" />
-      <button type="submit">Search</button>
-    </fieldset>
-  </form>
+      <div class="search">
+        <button class="button is-primary" type="submit">Search</button>
+      </div>
+    </form>
+  </div>
   <div>
     {% for data in data_list %}
       {{ data.oembed.html }}
@@ -27,11 +35,11 @@
       <p>Data not found yet.</p>
     {% endfor %}
   </div>
-  <div class="pagination">
+  <navi class="pagination">
   {% if paginator %}
-    {% if paginator.has_prev %}<a href="/home/{{ paginator.prev_page }}/{% if query_string %}?{{ query_string }}{% endif %}">前へ</a>{% endif %}
+    {% if paginator.has_prev %}<a class="button" href="/home/{{ paginator.prev_page }}/{% if query_string %}?{{ query_string }}{% endif %}">前へ</a>{% endif %}
     {{ paginator.current_page }} of {{ paginator.pages }}.
-    {% if paginator.has_next %}<a href="/home/{{ paginator.next_page }}/{% if query_string %}?{{ query_string }}{% endif %}">次へ</a>{% endif %}
+    {% if paginator.has_next %}<a class="button" href="/home/{{ paginator.next_page }}/{% if query_string %}?{{ query_string }}{% endif %}">次へ</a>{% endif %}
   {% endif %}
-  </div>
+  </navi>
 {% endblock %}

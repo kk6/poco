@@ -1,0 +1,49 @@
+.content {
+  width: 500px;
+  margin: 0 auto;
+}
+.footer {
+  width: 500px;
+  margin: 0 auto;
+}
+.pagination {
+  text-align: center;
+}
+.signin {
+  width: 250px;
+}
+.sorts input {
+	display: none;
+}
+.sorts label{
+	display: block;
+	float: left;
+	cursor: pointer;
+	width: 60px;
+	margin: 0;
+	padding: 10px;
+	background: #bdc3c7;
+	color: #869198;
+	font-size: 16px;
+	text-align: center;
+	line-height: 1;
+	transition: .2s;
+}
+.sorts label:first-of-type{
+	border-radius: 3px 0 0 3px;
+}
+.sorts label:last-of-type{
+	border-radius: 0 3px 3px 0;
+}
+.sorts input[type="radio"]:checked + .switch-likes {
+	background-color: #e81c4f;
+	color: #fff;
+}
+.sorts input[type="radio"]:checked + .switch-retweets {
+	background-color: #19cf86;
+	color: #fff;
+}
+.term {
+  clear: both;
+  padding: 10px 0 10px;
+}

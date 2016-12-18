@@ -10,18 +10,26 @@ from bottle import (
     jinja2_template as template,
     redirect,
     request,
+    static_file,
 )
 from middleware.twitter import TwitterMiddleware
 import utils
 from models import create_or_update_tweet
 from search import search_tweets
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
 twitter_config = {
   'consumer_key': os.environ['POCO_CONSUMER_KEY'],
   'consumer_secret': os.environ['POCO_CONSUMER_SECRET'],
   'callback_url': 'http://127.0.0.1:8000/verify',
 }
 app = TwitterMiddleware(bottle.app(), twitter_config)
+
+
+@route('/static/<filename:path>')
+def send_static(filename):
+    return static_file(filename, root=STATIC_DIR)
 
 
 @route('/')

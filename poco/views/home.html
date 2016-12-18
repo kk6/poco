@@ -7,14 +7,14 @@
     <fieldset>
       <p>
         <label for="likes">Likes:</label>
-        <input id="likes" type="radio" name="sort_by" value="like" checked="checked" />
-        <label for="rts">RTs:</label>
-        <input id="rts" type="radio" name="sort_by" value="retweet" />
+        <input id="likes" type="radio" name="sort_by" value="likes" checked="checked" />
+        <label for="retweets">RTs:</label>
+        <input id="retweets" type="radio" name="sort_by" value="retweets" />
       </p>
-      <label>From: <input type="date" name="since" /></label>
-      <label>To: <input type="date" name="until" /></label>
+      <label>From: <input type="date" name="since" value="{{ params.since }}" /></label>
+      <label>To: <input type="date" name="until" value="{{ params.until }}" /></label>
       <label for="media_only">Media tweets only.</label>
-      <input id="media_only" type="checkbox" name="media_only" />
+      <input id="media_only" type="checkbox" name="media_only" {% if params.media_only %}checked="checked"{% endif %} />
       <input type="hidden" name="user_id" value="{{ user.id }}" />
       <input type="hidden" name="screen_name" value="{{ user.screen_name }}" />
       <button type="submit">Search</button>

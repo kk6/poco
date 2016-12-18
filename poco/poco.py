@@ -63,7 +63,7 @@ def home(page=1):
         tweets = search_tweets(search_criteria, selections=['tweet_id'])
 
         _data_list = utils.fetch_tweet_data(twitter.api, tweets)
-        sorted_data = utils.sort_by('likes', _data_list, reverse=True)
+        sorted_data = utils.sort_by(p['sort_by'][0], _data_list, reverse=True)
 
         paginator = utils.Pagination(sorted_data, per_page=10, current_page=page)
         paginated_data = paginator.paginate()
@@ -75,7 +75,7 @@ def home(page=1):
             render_data_list.append(data)
 
     return template('home', user=user, data_list=render_data_list, paginator=paginator,
-                    query_string=request.query_string)
+                    query_string=request.query_string, params=request.params)
 
 
 @route('/import')

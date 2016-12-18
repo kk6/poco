@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
-  <a href="import">Import CSV</a>
   <h1>Hello {{ user.screen_name }}!</h1>
   <div class="box">
     <form action="" method="get">
@@ -37,9 +36,9 @@
   </div>
   <navi class="pagination">
   {% if paginator %}
-    {% if paginator.has_prev %}<a class="button" href="/home/{{ paginator.prev_page }}/{% if query_string %}?{{ query_string }}{% endif %}">前へ</a>{% endif %}
+    {% if paginator.has_prev %}<a class="button" href="/home/{{ paginator.prev_page }}/{% if query_string %}?{{ query_string }}{% endif %}">Prev</a>{% endif %}
     {{ paginator.current_page }} of {{ paginator.pages }}.
-    {% if paginator.has_next %}<a class="button" href="/home/{{ paginator.next_page }}/{% if query_string %}?{{ query_string }}{% endif %}">次へ</a>{% endif %}
+    {% if paginator.has_next %}<a class="button" href="/home/{{ paginator.next_page }}/{% if query_string %}?{{ query_string }}{% endif %}">Next</a>{% endif %}
   {% endif %}
   </navi>
 {% endblock %}

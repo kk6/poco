@@ -76,7 +76,7 @@ def home(page=1):
         paginator = utils.Pagination(sorted_data, per_page=10, current_page=page)
         paginated_data = paginator.paginate()
 
-        # Set oEmbded
+        # Set oEmbed
         render_data_list = []
         for data in paginated_data:
             data['oembed'] = twitter.api.get_oembed(data['tweet_id'])

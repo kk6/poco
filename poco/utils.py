@@ -49,7 +49,7 @@ def fetch_tweet_data(api, tweets, text_trancate_to=30):
         tweet_ids = [t.tweet_id for t in sub_iter]
         if not tweet_ids:
             break
-        _tweets = api.statuses_lookup(tweet_ids)
+        _tweets = api.statuses_lookup(tweet_ids, trim_user=True)
         for tweet in _tweets:
             yield {
                 'tweet_id': tweet.id,

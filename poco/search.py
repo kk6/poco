@@ -7,7 +7,7 @@ from models import Tweet
 
 def search_tweets(search_criteria, selections=None):
     def _build_clauses(criteria):
-        _clauses = []
+        _clauses = [Tweet.retweeted_status_user_id.is_null(True)]  # ignore self retweet
         if criteria['since']:
             _clauses.append(Tweet.timestamp >= criteria['since'])
         if criteria['until']:

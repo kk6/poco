@@ -66,6 +66,7 @@ def home(page=1):
             'until': datetime.datetime.strptime(q['until'], '%Y-%m-%d') if q['until'] else None,
             'media_only': 'media_only' in q,
             'screen_name': q['screen_name'],
+            'user_id': q['user_id']
         }
 
         tweets = search_tweets(search_criteria, selections=['tweet_id'])

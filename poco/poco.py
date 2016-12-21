@@ -80,7 +80,10 @@ def home(page=1):
         # Set oEmbed
         render_data_list = []
         for data in paginated_data:
-            data['oembed'] = twitter.api.get_oembed(data['tweet_id'])
+            try:
+                data['oembed'] = utils.get_cached_oembed(twitter.api, data['tweet_id'])
+            except EOFError:
+                data['oembed'] = utils.get_oembed(twitter.api, data['tweet_id'])
             render_data_list.append(data)
 
     return template('home', user=user, data_list=render_data_list, paginator=paginator,

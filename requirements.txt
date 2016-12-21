@@ -3,6 +3,7 @@ tweepy
 bottle
 jinja2
 peewee
+beaker
 
 # tests
 pytest

@@ -11,9 +11,11 @@ cache_opts = {
     'cache.type': 'file',
     'cache.data_dir': '/tmp/cache/data',
     'cache.lock_dir': '/tmp/cache/lock',
-    'cache.regions': 'long_term',
+    'cache.regions': 'long_term, oembed',
     'cache.long_term.type': 'file',
     'cache.long_term.expire': '86400',
+    'cache.oembed.type': 'file',
+    'cache.oembed.expire': '3153600000',
 }
 
 cache = CacheManager(**parse_cache_config_options(cache_opts))
@@ -80,6 +82,15 @@ def fetch_tweet_data(api, tweets):
                 'likes': tweet.favorite_count,
                 'retweets': tweet.retweet_count,
             }
+
+
+@cache.region('oembed')
+def get_cached_oembed(api, tweet_id):
+    return get_oembed(api, tweet_id)
+
+
+def get_oembed(api, tweet_id):
+    return api.get_oembed(tweet_id)
 
 
 def sort_by(key, data_list, reverse=False):

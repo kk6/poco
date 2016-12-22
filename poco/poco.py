@@ -16,6 +16,8 @@ from middleware.twitter import TwitterMiddleware
 import utils
 from models import create_or_update_tweet
 from search import search_tweets
+from twitter import fetch_tweet_data, get_cached_oembed, get_oembed
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
@@ -71,7 +73,7 @@ def home(page=1):
 
         tweets = search_tweets(search_criteria, selections=['tweet_id'])
 
-        _data_list = utils.fetch_tweet_data(twitter.api, tweets)
+        _data_list = fetch_tweet_data(twitter.api, tweets)
         sorted_data = utils.sort_by(q['sort_by'], _data_list, reverse=True)
 
         paginator = utils.Pagination(sorted_data, per_page=10, current_page=page)
@@ -81,9 +83,9 @@ def home(page=1):
         render_data_list = []
         for data in paginated_data:
             try:
-                data['oembed'] = utils.get_cached_oembed(twitter.api, data['tweet_id'])
+                data['oembed'] = get_cached_oembed(twitter.api, data['tweet_id'])
             except EOFError:
-                data['oembed'] = utils.get_oembed(twitter.api, data['tweet_id'])
+                data['oembed'] = get_oembed(twitter.api, data['tweet_id'])
             render_data_list.append(data)
 
     return template('home', user=user, data_list=render_data_list, paginator=paginator,

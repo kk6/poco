@@ -2,6 +2,7 @@
 import codecs
 import datetime
 import os
+from functools import wraps
 
 import bottle
 from bottle import (
@@ -27,6 +28,16 @@ twitter_config = {
   'callback_url': 'http://127.0.0.1:8000/verify',
 }
 app = TwitterMiddleware(bottle.app(), twitter_config)
+
+
+def login_required(f):
+    @wraps(f)
+    def _login_required(*args, **kwargs):
+        twitter = request.environ.get('twitter')
+        if twitter.api is None:
+            return redirect('/')
+        return f(*args, **kwargs)
+    return _login_required
 
 
 @route('/static/<filename:path>')
@@ -56,6 +67,7 @@ def verify():
 
 @route('/home')
 @route('/home/<page:int>/')
+@login_required
 def home(page=1):
     twitter = request.environ.get('twitter')
     user = twitter.api.me()
@@ -93,11 +105,13 @@ def home(page=1):
 
 
 @route('/import')
+@login_required
 def import_csv():
     return template('import')
 
 
 @route('/import', method='POST')
+@login_required
 def do_import_csv():
     twitter = request.environ.get('twitter')
     file = request.files.get('file')

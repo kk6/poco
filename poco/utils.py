@@ -18,6 +18,11 @@ def str2datetime(s):
 
 
 def force_int(s):
+    """Forcibly convert to int
+
+    :param s: any python object
+    :return: int or None
+    """
     try:
         return int(s)
     except ValueError:
@@ -25,6 +30,8 @@ def force_int(s):
 
 
 def parse_tweets_csv(fp):
+    """Parse tweets.csv and convert the value to a Python object
+    """
     for row in csv.DictReader(fp):
         yield {
             'tweet_id': force_int(row['tweet_id']),

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import csv
 import datetime
-import math
 
 
 def str2datetime(s):
@@ -48,59 +47,3 @@ def parse_tweets_csv(fp):
 
 def sort_by(key, data_list, reverse=False):
     return sorted(data_list, key=lambda d: d[key], reverse=reverse)
-
-
-class Pagination(object):
-
-    def __init__(self, object_list, per_page, current_page, abbreviated_page_count=5):
-        self.object_list = object_list
-        self.per_page = per_page
-        self.current_page = current_page
-        self.total_count = len(object_list)
-        self.abbreviated_page_count = abbreviated_page_count
-
-    @property
-    def pages(self):
-        return math.ceil(self.total_count / self.per_page)
-
-    @property
-    def has_prev(self):
-        return self.current_page > 1
-
-    @property
-    def has_next(self):
-        return self.current_page < self.pages
-
-    @property
-    def prev_page(self):
-        if self.has_prev:
-            return self.current_page - 1
-
-    @property
-    def next_page(self):
-        if self.has_next:
-            return self.current_page + 1
-
-    def abbreviated_pages(self):
-        """Returns an abbreviated page set centered on the current page
-
-        :return: abbreviated pages
-        
-        """
-        if self.pages > self.abbreviated_page_count:
-            if self.current_page <= (self.abbreviated_page_count // 2):
-                return list(range(1, self.abbreviated_page_count + 1))
-            elif (self.current_page + (self.abbreviated_page_count // 2) + 1) <= self.pages:
-                return list(range(self.current_page - self.abbreviated_page_count // 2,
-                                  self.current_page + (self.abbreviated_page_count // 2) + 1))
-            else:
-                return list(range(self.pages - (self.abbreviated_page_count - 1), self.pages + 1))
-        else:
-            return list(range(1, self.pages + 1))
-
-    def paginate(self):
-        """Returns a sub sequence of object_list
-        """
-        start = (self.current_page - 1) * self.per_page
-        end = start + self.per_page
-        return self.object_list[start:end]

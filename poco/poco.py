@@ -18,6 +18,7 @@ import utils
 from models import create_or_update_tweet
 from search import search_tweets
 from twitter import fetch_tweet_data, get_cached_oembed, get_oembed
+from pagination import Pagination
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -88,7 +89,7 @@ def home(page=1):
         _data_list = fetch_tweet_data(twitter.api, tweets)
         sorted_data = utils.sort_by(q['sort_by'], _data_list, reverse=True)
 
-        paginator = utils.Pagination(sorted_data, per_page=10, current_page=page)
+        paginator = Pagination(sorted_data, per_page=10, current_page=page)
         paginated_data = paginator.paginate()
 
         # Set oEmbed

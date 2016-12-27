@@ -131,6 +131,24 @@ class TestPagination(object):
     @pytest.mark.parametrize(
         'object_list, per_page, current_page, expected',
         [
+            (range(30), 10, 1, [1, 2, 3]),
+            (range(50), 10, 1, [1, 2, 3, 4, 5]),
+            (range(100), 10, 1, [1, 2, 3, 4, 5]),
+            (range(100), 10, 2, [1, 2, 3, 4, 5]),
+            (range(100), 10, 3, [1, 2, 3, 4, 5]),
+            (range(100), 10, 5, [3, 4, 5, 6, 7]),
+            (range(100), 10, 7, [5, 6, 7, 8, 9]),
+            (range(100), 10, 8, [6, 7, 8, 9, 10]),
+            (range(100), 10, 10, [6, 7, 8, 9, 10]),
+        ],
+    )
+    def test_abbreviated_pages(self, target_class, object_list, per_page, current_page, expected):
+        p = target_class(object_list, per_page, current_page)
+        assert p.abbreviated_pages() == expected
+
+    @pytest.mark.parametrize(
+        'object_list, per_page, current_page, expected',
+        [
             (range(101), 10, 1, range(10)),
             (range(101), 10, 11, range(100, 101)),
             (range(55), 20, 1, range(20)),

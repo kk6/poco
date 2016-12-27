@@ -34,11 +34,5 @@
       <p>Data not found yet.</p>
     {% endfor %}
   </div>
-  <navi class="pagination">
-  {% if paginator %}
-    {% if paginator.has_prev %}<a class="button" href="/home/{{ paginator.prev_page }}/{% if query_string %}?{{ query_string }}{% endif %}">Prev</a>{% endif %}
-    {{ paginator.current_page }} of {{ paginator.pages }}.
-    {% if paginator.has_next %}<a class="button" href="/home/{{ paginator.next_page }}/{% if query_string %}?{{ query_string }}{% endif %}">Next</a>{% endif %}
-  {% endif %}
-  </navi>
+  {% include 'components/pagination.html' %}
 {% endblock %}

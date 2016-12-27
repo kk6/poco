@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Import CSV{% endblock %}
+
 {% block content %}
+  {% if message %}
+  <div class="notification is-danger">
+  <button class="delete"></button>
+  {{ message }}
+  </div>
+  {% endif %}
   <div class="box">
     <form action="" method=post enctype=multipart/form-data>
       <p>
@@ -9,4 +16,13 @@
       </p>
     </form>
   </div>
+<script>
+function remove(event) {
+    event.currentTarget.parentNode.remove();
+}
+var elements = document.getElementsByClassName('delete');
+[].forEach.call(elements, function(el) {
+    el.addEventListener('click', remove, false);
+});
+</script>
 {% endblock %}

@@ -11,8 +11,11 @@ from bottle import (
     jinja2_template as template,
     redirect,
     request,
+    response,
     static_file,
 )
+from bottle_utils.flash import message_plugin
+
 from middleware.twitter import TwitterMiddleware
 import utils
 from models import create_or_update_tweet
@@ -21,6 +24,7 @@ from twitter import fetch_tweet_data, get_cached_oembed, get_oembed
 from pagination import Pagination
 
 
+bottle.install(message_plugin)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 twitter_config = {
@@ -108,7 +112,7 @@ def home(page=1):
 @route('/import')
 @login_required
 def import_csv():
-    return template('import')
+    return template('import', message=request.message)
 
 
 @route('/import', method='POST')
@@ -116,6 +120,10 @@ def import_csv():
 def do_import_csv():
     twitter = request.environ.get('twitter')
     file = request.files.get('file')
+    name, ext = os.path.splitext(file.filename)
+    if ext not in ('.csv', '.txt'):
+        response.flash("File extension not allowed.")
+        redirect('import')
     user = twitter.api.me()
     user_id = user.id
     for data in utils.parse_tweets_csv(codecs.iterdecode(file.file, 'utf8')):

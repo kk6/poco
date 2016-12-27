@@ -4,6 +4,7 @@ bottle
 jinja2
 peewee
 beaker
+bottle-utils-flash
 
 # tests
 pytest

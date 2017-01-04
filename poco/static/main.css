@@ -11,7 +11,8 @@
   margin: 0 auto;
 }
 .pagination {
-  text-align: center;
+	width: 500px;
+	margin: 0 auto;
 }
 .signin {
   width: 250px;
@@ -51,3 +52,4 @@
   clear: both;
   padding: 10px 0 10px;
 }
+

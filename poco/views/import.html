@@ -2,27 +2,29 @@
 {% block title %}Import CSV{% endblock %}
 
 {% block content %}
-  {% if message %}
-  <div class="notification is-danger">
-  <button class="delete"></button>
-  {{ message }}
+  <div class="content">
+    {% if message %}
+    <div class="notification is-danger">
+    <button class="delete"></button>
+    {{ message }}
+    </div>
+    {% endif %}
+    <div class="box">
+      <form action="" method=post enctype=multipart/form-data>
+        <p>
+          <input type=file name=file>
+          <input type=submit value=Upload>
+        </p>
+      </form>
+    </div>
+    <script>
+    function remove(event) {
+        event.currentTarget.parentNode.remove();
+    }
+    var elements = document.getElementsByClassName('delete');
+    [].forEach.call(elements, function(el) {
+        el.addEventListener('click', remove, false);
+    });
+    </script>
   </div>
-  {% endif %}
-  <div class="box">
-    <form action="" method=post enctype=multipart/form-data>
-      <p>
-        <input type=file name=file>
-        <input type=submit value=Upload>
-      </p>
-    </form>
-  </div>
-<script>
-function remove(event) {
-    event.currentTarget.parentNode.remove();
-}
-var elements = document.getElementsByClassName('delete');
-[].forEach.call(elements, function(el) {
-    el.addEventListener('click', remove, false);
-});
-</script>
 {% endblock %}

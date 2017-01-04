@@ -15,7 +15,7 @@
   <header class="header">
     <nav class="nav">
       <div class="nav-left">
-        <a class="nav-item is-brand" href="/home">Poco</a>
+        <a class="nav-item is-brand" href="/home"><strong>Poco</strong></a>
       </div>
       <span class="nav-item">
         <a class="button is-primary" href="/import">
@@ -27,11 +27,20 @@
       </span>
     </nav>
   </header>
-  <div id="content" class="content">{% block content %}{% endblock %}</div>
-  <div id="footer" class="footer">
-    {% block footer %}
-    &copy; Copyright 2016 by <a href="http://twitter.com/kk6/">kk6</a>.
-    {% endblock %}
-  </div>
+  <div id="content" class="container">{% block content %}{% endblock %}</div>
+  <footer class="footer">
+    <div class="container">
+      <div class="content has-text-centered">
+        <p>
+          <strong>Poco</strong> by <a href="http://twitter.com/kk6">kk6</a>.
+        </p>
+        <p>
+          <a class="icon" href="https://github.com/kk6/poco">
+            <i class="fa fa-github"></i>
+          </a>
+        </p>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

@@ -1,11 +1,17 @@
-  <navi class="pagination">
+  <nav class="pagination">
   {% if paginator %}
-    {% if paginator.has_prev %}<a class="button" href="/home/{{ paginator.prev_page }}/{% if query_string %}?{{ query_string }}{% endif %}">Prev</a>{% endif %}
+    {% if paginator.has_prev %}
+    <a class="button" href="/home/{{ paginator.prev_page }}/{% if query_string %}?{{ query_string }}{% endif %}">Prev</a>
+    {% endif %}
+    {% if paginator.has_next %}
+    <a class="button" href="/home/{{ paginator.next_page }}/{% if query_string %}?{{ query_string }}{% endif %}">Next</a>
+    {% endif %}
+    <ul>
     {% for p in paginator.abbreviated_pages() %}
-      <span>
+      <li>
         <a class="button{% if paginator.current_page == p %} is-primary{% endif %}" href="/home/{{ p }}/{% if query_string %}?{{ query_string }}{% endif %}">{{ p }}</a>
-      </span>
+      </li>
     {% endfor %}
-    {% if paginator.has_next %}<a class="button" href="/home/{{ paginator.next_page }}/{% if query_string %}?{{ query_string }}{% endif %}">Next</a>{% endif %}
+    </ul>
   {% endif %}
-  </navi>
+  </nav>

@@ -1,0 +1,31 @@
+  <div class="box">
+    <form action="" method="get">
+      <p class="control">
+        <span>Srot by:</span>
+        <div class="sorts">
+          <input type="radio" name="sort_by" id="likes" value="likes"{% if params.sort_by == 'likes' %} checked{% endif %} />
+          <label for="likes" class="switch-likes">Likes</label>
+          <input type="radio" name="sort_by" id="retweets" value="retweets"{% if params.sort_by == 'retweets' %} checked{% endif %}>
+          <label for="retweets" class="switch-retweets">RTs</label>
+        </div>
+      </p>
+      <p class="control">
+        <div class="term">
+          <label>From: <input type="date" name="since" value="{{ params.since }}" /></label>
+          <label>To: <input type="date" name="until" value="{{ params.until }}" /></label>
+        </div>
+      </p>
+      <p class="control">
+        <div class="filter-media">
+          <label class="checkbox">Media tweets only
+            <input class="checkbox" type="checkbox" name="media_only" id="media_only"{% if params.media_only %} checked="checked"{% endif %} />
+          </label>
+        </div>
+      </p>
+      <input type="hidden" name="user_id" value="{{ user.id }}" />
+      <input type="hidden" name="screen_name" value="{{ user.screen_name }}" />
+      <p class="control">
+        <button class="button is-primary" type="submit">Search</button>
+      </p>
+    </form>
+  </div>

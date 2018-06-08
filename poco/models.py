@@ -28,9 +28,9 @@ class Tweet(peewee.Model):
         database = db
 
 
-def create_or_update_tweet(data):
-    tweet, created = Tweet.get_or_create(**data)
-    if not created:
-        tweet = Tweet(**data)
-        tweet.save()
+def get_or_create_tweet(data):
+    try:
+        tweet = Tweet.get_by_id(data["tweet_id"])
+    except Tweet.DoesNotExist:
+        tweet = Tweet.create(**data)
     return tweet

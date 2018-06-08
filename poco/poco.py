@@ -18,7 +18,7 @@ from bottle_utils.flash import message_plugin
 
 from middleware.twitter import TwitterMiddleware
 import utils
-from models import create_or_update_tweet
+from models import get_or_create_tweet
 from search import search_tweets
 from twitter import fetch_tweet_data, get_cached_oembed, get_oembed
 from pagination import Pagination
@@ -128,7 +128,7 @@ def do_import_csv():
     user_id = user.id
     for data in utils.parse_tweets_csv(codecs.iterdecode(file.file, 'utf8')):
         data['user_id'] = user_id
-        create_or_update_tweet(data)
+        get_or_create_tweet(data)
     return redirect('home')
 
 
